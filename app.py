@@ -6,8 +6,8 @@ from datetime import datetime
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
 
-users = {} # Чтобы пост со страницы создания поста отправялся на страницу ленты
-posts = []  # Список для хранения постов
+users = {}
+posts = []
 
 UPLOAD_FOLDER = 'static/uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -15,6 +15,7 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 @app.route('/')
 def home():
     return render_template('glavpage.html')
+
 
 @app.route('/registration', methods=['GET', 'POST'])
 def registration():
@@ -25,17 +26,31 @@ def registration():
         email = request.form['email']
         password = request.form['password']
 
+        # Обрабатываем загрузку аватара
+        avatar = request.files.get('avatar')
+        if avatar:
+            avatar_filename = secure_filename(avatar.filename)
+            avatar_path = os.path.join(app.config['UPLOAD_FOLDER'], avatar_filename)
+            avatar.save(avatar_path)
+        else:
+            avatar_filename = 'default.png' # Или другое изображение по умолчанию
+
+        # Проверяем, занят ли логин
         if login in users:
             return "Логин уже занят", 400
 
+        # Сохраняем информацию о пользователе, включая путь к аватару
         users[login] = {
+            'login': login,
             'name': name,
             'surname': surname,
             'email': email,
-            'password': password
+            'password': password,
+            'avatar': avatar_filename
         }
 
-        return redirect(url_for('signin'))
+        session['user'] = login
+        return redirect(url_for('lenta'))
 
     return render_template('registration.html')
 
@@ -61,31 +76,46 @@ def lenta():
     if 'user' not in session:
         return redirect(url_for('signin'))
 
-    user_data = users.get(session['user'], {})
-    return render_template('lenta.html', posts=posts, user_data=user_data)
+    user_login = session['user']
+    user_data = users.get(user_login, {})
+    user_avatar_path = 'uploads/' + user_data.get('avatar', 'default.png')  # 'default.png' - изображение по умолчанию
+    return render_template('lenta.html', posts=posts, user_data=user_data, user_avatar_path=user_avatar_path)
+
+
+@app.route('/notifications')
+def notifications():
+
+    return render_template('notifications.html')
+
 
 
 @app.route('/user_settings', methods=['GET', 'POST'])
 def user_settings():
     if 'user' not in session:
-        # Пользователь не вошел в систему, перенаправляем на страницу входа
         return redirect(url_for('signin'))
 
-    user_data = users.get(session['user'])
+    user_login = session['user']
+    user_data = users.get(user_login)
 
     if request.method == 'POST':
-        # Получаем данные из формы
+        # Update user_data based on form input
         user_data['name'] = request.form.get('first-name')
         user_data['surname'] = request.form.get('last-name')
-        # И так далее для каждого поля формы...
+        user_data['nickname'] = request.form.get('nickname')
+        user_data['birthdate'] = request.form.get('birthdate')
+        user_data['gender'] = request.form.get('gender')
+        user_data['email'] = request.form.get('email')
+        user_data['password'] = request.form.get('password')
+        user_data['country'] = request.form.get('country')
 
-        # Здесь код для сохранения данных пользователя...
-        users[session['user']] = user_data
+        # Update the user entry in the users dictionary
+        users[user_login] = user_data
 
-        # После сохранения данных перенаправляем на страницу ленты или обратно на страницу настроек
-        return redirect(url_for('lenta'))  # Или 'user_settings', если вы хотите остаться на этой странице
+        # Redirect to the 'lenta' page after updating
+        return redirect(url_for('lenta'))
 
-    # Если это GET-запрос, отображаем страницу настроек
+    return render_template('user_settings.html', user_data=user_data)
+
     return render_template('user_settings.html', user_data=user_data)
 
 
@@ -118,13 +148,36 @@ def create_post():
 
     return render_template('createpost.html')
 
-@app.route('/createdpost')
-def created_post():
-    return render_template('createdpost.html')
 
-@app.route('/welcome')
-def welcome():
-    return render_template('welcome.html')
+
+@app.route('/deletepost/<int:post_index>', methods=['POST'])
+def delete_post(post_index):
+    if 'user' not in session:
+        return redirect(url_for('signin'))
+
+    # Проверяем, существует ли пост с таким индексом
+    if post_index < len(posts):
+        del posts[post_index]
+        # Можно добавить сообщение об успешном удалении
+    else:
+        # Можно добавить сообщение об ошибке, если пост не найден
+        pass
+
+    return redirect(url_for('lenta'))
+
+
+@app.route('/allusers')
+def all_users():
+    if 'user' not in session:
+        return redirect(url_for('signin'))
+
+    return render_template('allusers.html', users=users, current_user=session['user'])
+
+
+@app.route('/logout')
+def logout():
+    session.pop('user', None)
+    return redirect(url_for('registration'))
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)
