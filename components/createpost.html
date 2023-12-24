@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Создание поста</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-image: url('/static/fon.png');
+      background-size: cover;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .form-container {
+      background: #ffffff; /* Светлый фон */
+      padding: 40px; /* Увеличенный отступ */
+      border-radius: 12px; /* Больше закругление углов */
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Мягкая тень */
+      width: 100%;
+      max-width: 700px; /* Увеличенная максимальная ширина */
+    }
+
+    input[type="text"],
+    textarea,
+    input[type="file"] {
+      width: calc(100% - 20px);
+      padding: 15px; /* Больше padding */
+      margin-bottom: 20px; /* Больше отступ между полями */
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
+    input[type="text"]:focus,
+    textarea:focus,
+    input[type="file"]:focus {
+      outline: none;
+      border-color: #9c27b0; /* Яркий цвет при фокусе */
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 150px; /* Больше минимальная высота */
+    }
+
+    input[type="submit"] {
+      background-color: #9c27b0; /* Яркий фон кнопки */
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    input[type="submit"]:hover {
+      background-color: #7b1fa2; /* Темнее фон при наведении */
+    }
+  </style>
+</head>
+
+<body>
+
+  <script>
+    function createPost() {
+      let title = document.getElementById('title').value;
+      let text = document.getElementById('text').value;
+
+      // Здесь можно отправить данные на сервер
+
+      // Переход на следующую страницу
+      window.location.href = '/created.html';
+    }
+
+    document.addEventListener('DOMContentLoaded', (event) => {
+      let userName = 'Имя пользователя'; // Здесь установите имя пользователя
+      let animatedText = document.querySelector('.animated-text');
+      animatedText.textContent = userName + ', поделитесь чем-нибудь со всеми...';
+    });
+  </script>
+
+  <div class="form-container">
+      <form action="{{ url_for('create_post') }}" method="post" enctype="multipart/form-data">
+          <input type="text" name="title" placeholder="Заголовок поста" required>
+          <textarea name="content" placeholder="Описание поста" required></textarea>
+          <input type="file" name="image">
+          <input type="submit" value="Опубликовать">
+      </form>
+  </div>
+
+  <script>
+    // Загрузка фона из LocalStorage
+    function loadBackground() {
+      const savedBackground = localStorage.getItem('background');
+      if (savedBackground) {
+        document.body.style.backgroundImage = savedBackground;
+      }
+    }
+
+    // Вызов функции при загрузке страницы
+    document.addEventListener('DOMContentLoaded', (event) => {
+      loadBackground();
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <!-- ... Your head content ... -->
+    <style>
+        body {
+        background-image: url('/static/fon.png');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        min-height: 100vh;
+        }
+
+        body.brown {
+        background-image: url('/static/fontwo.png');
+        }
+        .switch-container {
+            position: absolute;
+            top: 50px;
+            left: 440px;
+        }
+        .user-box {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px;
+            border-radius: 10px;
+            background-color: black;
+            color: white;
+        }
+        .edit-profile-btn, .add-friend-btn {
+            margin-top: 10px;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    {% for user_login, user_info in users.items() %}
+    <div class="user-box">
+        <p>Логин: {{ user_info['login'] }}</p>
+        <p>Имя: {{ user_info['name'] }}</p>
+        <p>Фамилия: {{ user_info['surname'] }}</p>
+        <p>Почта: {{ user_info['email'] }}</p>
+        {% if current_user == user_login %}
+            <a href="{{ url_for('user_settings') }}"><button class="edit-profile-btn">Редактировать профиль</button></a>
+        {% else %}
+            <button class="add-friend-btn">Добавить в друзья</button>
+        {% endif %}
+    </div>
+    {% endfor %}
+</body>
+</html>

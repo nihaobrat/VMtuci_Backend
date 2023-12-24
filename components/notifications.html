@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        button {
+            font-size: 18px;
+            padding: 10px 20px;
+            margin: 20px;
+            cursor: pointer;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        #notificationContainer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        #notificationContent {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+    </style>
+    <title>Уведомление</title>
+</head>
+<body>
+    <button id="showNotification">Показать уведомление</button>
+    <div id="notificationContainer" class="hidden">
+        <div id="notificationContent">
+            <h1>Привет, это уведомление!</h1>
+            <p>Это красивая HTML-страница, которая отображается после нажатия на кнопку уведомления.</p>
+        </div>
+    </div>
+    <script>
+        const showNotificationButton = document.getElementById('showNotification');
+        const notificationContainer = document.getElementById('notificationContainer');
+
+        showNotificationButton.addEventListener('click', () => {
+            notificationContainer.classList.remove('hidden');
+        });
+
+        notificationContainer.addEventListener('click', (event) => {
+            if (event.target === notificationContainer) {
+                notificationContainer.classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация</title>
+    <style>
+        /* Основные стили */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-image: url('/static/fon.png');
+            background-size: cover;
+        }
+
+        .registration-form {
+            margin: 0 auto;
+            text-align: center;
+            border: 1px solid #ccc;
+            padding: 50px;
+            width: 320px;
+            border-radius: 30px;
+            background-color: white;
+            opacity: 1;
+        }
+
+        /* Стили для групп формы */
+        .form-group {
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px 0;
+            box-sizing: border-box;
+            border: none;
+            border-bottom: 1px solid #ccc;
+            margin-top: 5px;
+            outline: none;
+        }
+
+        input:focus {
+            border-bottom: 1px solid #5845A7;
+        }
+
+        /* Стили для кнопки */
+        button {
+            width: 68%;
+            padding: 10px;
+            background-color: #5845A7;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #5845A7;
+        }
+
+        p {
+            margin-top: 15px;
+        }
+
+        h2 {
+            font-family: "Times New Roman", Times, serif;
+            font-weight: normal;
+        }
+
+        /* Стили для загрузки аватарки */
+        .avatar-upload {
+            position: relative;
+            max-width: 205px;
+            margin: 10px auto;
+        }
+
+        .avatar-upload .avatar-edit {
+            position: absolute;
+            right: 7px;
+            z-index: 1;
+            top: 0px;
+        }
+
+        .avatar-upload .avatar-edit input {
+            display: none;
+        }
+
+        .avatar-upload .avatar-edit label {
+            display: inline-block;
+            width: 34px;
+            height: 34px;
+            margin-bottom: 0;
+            border-radius: 100%;
+            background: #FFFFFF;
+            border: 1px solid transparent;
+            box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.12);
+            cursor: pointer;
+            font-weight: normal;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .avatar-upload .avatar-edit label:before {
+            content: '+';
+            font-family: Arial, sans-serif;
+            color: #5845A7;
+            font-size: 24px;
+            line-height: 34px;
+            text-align: center;
+        }
+
+        .avatar-upload .avatar-preview {
+            width: 100px;
+            height: 100px;
+            position: relative;
+            border-radius: 100%;
+            border: 6px solid #F8F8F8;
+            box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.1);
+            margin-left: 50px;
+        }
+
+        .avatar-upload .avatar-preview > div {
+            width: 100%;
+            height: 100%;
+            border-radius: 100%;
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            margin-left: 0px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="registration-form">
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="VMtuci лого" width="160" height="80">
+        <h2>Регистрация VMtuci</h2>
+        <form action="{{ url_for('registration') }}" method="post" onsubmit="return validateForm()" enctype="multipart/form-data">
+            <div class="avatar-upload">
+                <div class="avatar-edit">
+                    <input type='file' id="avatarInput" accept=".png, .jpg, .jpeg" onchange="previewImage(event)" />
+                    <label for="avatarInput"></label>
+                </div>
+                <div class="avatar-preview">
+                    <div id="imagePreview" style="background-image: url('/path/to/default-avatar.png');">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <input type="text" id="login" name="login" required placeholder="Логин">
+            </div>
+            <div class="form-group">
+                <input type="text" id="name" name="name" required placeholder="Имя">
+            </div>
+            <div class="form-group">
+                <input type="text" id="surname" name="surname" required placeholder="Фамилия">
+            </div>
+            <div class="form-group">
+                <input type="email" id="email" name="email" required placeholder="Почта">
+            </div>
+            <div class="form-group">
+                <input type="password" id="password" name="password" required placeholder="Пароль (минимум 6 символов)" minlength="6">
+            </div>
+
+            <button type="submit">Зарегистрироваться</button>
+        </form>
+        <p>Уже есть аккаунт? <a href="{{ url_for('signin') }}">Войти</a></p>
+    </div>
+
+    <script type="text/javascript">
+        function validateEmail(email) {
+            var pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return pattern.test(email);
+        }
+
+        function validateForm() {
+            var login = document.getElementById('login').value;
+            var name = document.getElementById('name').value;
+            var surname = document.getElementById('surname').value;
+            var email = document.getElementById('email').value;
+            var password = document.getElementById('password').value;
+
+            if (login !== '' && name !== '' && surname !== '' && email !== '' && password !== '') {
+                if (!validateEmail(email)) {
+                    alert('Пожалуйста, введите корректный адрес электронной почты.');
+                    return false;
+                }
+                if (password.length < 6) {
+                    alert('Пароль должен содержать минимум 6 символов.');
+                    return false;
+                }
+                return true;
+            } else {
+                alert('Пожалуйста, заполните все поля.');
+                return false;
+            }
+        }
+
+        function previewImage(event) {
+            var reader = new FileReader();
+            reader.onload = function() {
+                var output = document.getElementById('imagePreview');
+                output.style.backgroundImage = 'url(' + reader.result + ')';
+            }
+            reader.readAsDataURL(event.target.files[0]);
+        }
+    </script>
+</body>
+</html>

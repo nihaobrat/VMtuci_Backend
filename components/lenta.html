@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Основная страница</title>
+
+    <style>
+        body {
+        background-image: url('/static/fon.png');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        min-height: 100vh;
+        transition: background-color 0.4s ease, color 0.4s ease;
+        }
+
+        .createpost-btn, .settings-btn, .groups-btn, .edit-profile-btn, .support-btn, .user-info, .post, .schedule-btn, .search-friends-btn {
+            transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+        body.brown {
+        background-image: url('/static/fontwo.png');
+        }
+        .switch-container {
+            position: absolute;
+            top: 33px;
+            left: 440px;
+        }
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: background-color 0.4s;
+            border-radius: 34px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: transform 0.4s;
+            border-radius: 50%;
+        }
+        input:checked + .slider {
+            background-color: #000;
+        }
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+        .logo {
+            position: absolute;
+            top: 25px;
+            left: 314px;
+        }
+
+
+
+
+        .settings {
+            position: absolute;
+            top: 25px;
+            left: 1049px;
+            border-radius: 20px;
+            cursor: pointer;
+            border: none;
+
+
+        }
+        .createpost-btn {
+            background-color: #fff;
+            color: #000;
+            border-radius: 20px;
+            cursor: pointer;
+            border: none;
+            padding: 10px 20px;
+        }
+
+        .createpost {
+            position: absolute;
+            top: 25px;
+            left: 530px;
+            border-radius: 20px;
+            cursor: pointer;
+            border: none;
+
+
+
+        }
+        .settings-btn {
+            background-color: #fff;
+            color: black;
+            border-radius: 20px;
+            cursor: pointer;
+            border: none;
+            padding: 10px 39px;
+        }
+
+
+
+
+
+        .groups-btn {
+            background-color: #fff;
+            color: #000;
+            border-radius: 20px;
+            cursor: pointer;
+            border: none;
+            padding: 10px 23px;
+        }
+
+        .groups {
+            position: absolute;
+            top: 190px;
+            left: 1028px;
+            border-radius: 20px;
+            cursor: pointer;
+            border: none;
+            padding:8px 20px;
+        }
+        .groups-list {
+         display: none; /* Меню скрыто по умолчанию */
+         position: absolute;
+         background-color: white;
+         color: black;
+
+         min-width: 120px;
+         box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+         z-index: 1;
+         border-radius: 5px;
+         transition: opacity 0.5s ease;
+         }
+        .groups-list ul {
+         list-style-type: none;
+         padding: 0;
+         margin: 0;
+         border-radius: 5px; /* Скругление для всего списка */
+         overflow: hidden; /* Предотвращает выход содержимого за границы скругления */
+        }
+
+        .groups-list li {
+        padding: 18px 10px;
+        text-align: left;
+        border-bottom: 3px solid #ddd;
+        cursor: pointer;
+        background-color: white;
+        color: black;
+        transition: background-color 0.3s ease; /* Плавное изменение фона при наведении */
+        }
+
+        .groups-list li:hover {
+        background-color: violet; /* Цвет фона при наведении */
+        }
+
+        .groups-list li:last-child {
+            border-bottom: none;
+        }
+
+        .groups-list li a {
+            text-decoration: none;
+            color: black;
+            display: block;
+        }
+        .user-info {
+    position: absolute;
+    top: 85px;
+    left: 310px;
+
+    text-align: left;
+    background-color: white;
+    border: 2px solid #5845A7;
+    padding: 15px;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    width: 140px; /* Фиксированная ширина */
+    height: 95px; /* Фиксированная высота */
+    overflow: auto; /* Добавьте прокрутку, если содержимое превышает размер */
+}
+
+
+        .user-details span {
+        display: block;
+        margin-bottom: 10px;
+        background-color: #fff;
+        color: #000;
+        font-size: 1.2em;
+        font-weight: bold;
+        }
+
+        .user-details span:not(:last-child) {
+
+        padding-bottom: 5px;
+        }
+
+        .posts-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Центрирование элементов по горизонтали */
+    margin-top: -30px; /* Отступ сверху для контейнера */
+    margin-left: -30px;
+}
+
+.post {
+    width: 28%; /* Процентная ширина для адаптивности */
+    margin-bottom: 20px; /* Отступ между постами */
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    background-color: white;
+}
+
+
+        .post img {
+        width: 100%; /* Ширина изображения соответствует ширине поста */
+        border-radius: 5px; /* Закругленные углы для изображения */
+        margin-bottom: 20px; /* Отступ от изображения до текста */
+        }
+
+        body {
+            padding-top: 70px; /* Настройте значение в соответствии с высотой вашей шапки */
+            /* Остальные стили для body */
+        }
+
+        .delete-post-btn {
+            background-color: #ff4d4d; /* Цвет кнопки */
+            color: white;
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 0px;
+        }
+        .delete-post-btn:hover {
+            background-color: #e60000; /* Темнее цвет при наведении */
+        }
+
+        .post-actions {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 10px;
+        }
+
+
+
+        .modal {
+        display: none; /* Изначально окно не отображается */
+        position: fixed; /* Фиксированное позиционирование относительно вьюпорта */
+        z-index: 1000; /* Высокое значение, чтобы быть поверх всех элементов */
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto; /* При необходимости можно прокручивать содержимое */
+        background-color: rgba(0,0,0,0.4); /* Полупрозрачный фон за модальным окном */
+        }
+
+        .modal-content {
+          background-color: black;
+          margin: 15% auto; /* Отцентрировано по вертикали и горизонтали */
+          padding: 20px;
+          border: 1px solid #888;
+          width: 300px; /* Фиксированная ширина окна */
+          border-radius: 150px; /* Круглое окно */
+          text-align: center;
+          position: relative; /* Для возможности использования z-index внутри .modal */
+          z-index: 1001; /* Убедитесь, что содержимое модального окна выше фона */
+        }
+
+        /* Стили для кнопки закрытия */
+        .close {
+          color: #aaa;
+          float: right;
+          font-size: 28px;
+          font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+          color: black;
+          text-decoration: none;
+          cursor: pointer;
+        }
+
+        /* Стили для выпадающего списка */
+        .theme-selector {
+          margin-bottom: 10px;
+        }
+
+        .theme-selector select {
+          border: 1px solid #ccc;
+          border-radius: 20px;
+          padding: 10px;
+          width: 150px;
+          outline: none;
+          cursor: pointer;
+        }
+
+        /* Стили для кнопки Сохранить */
+        button {
+    background-color: #fff; /* Black background */
+    color: #000; /* White text */
+    border-radius: 20px;
+    cursor: pointer;
+    border: none;
+    padding: 10px 20px;
+}
+
+
+        button:hover {
+          background-color: violet;
+        }
+
+
+            .edit-profile {
+            position: absolute;
+            top: 25px;
+            left: 685px; /* или подстройте значение, чтобы кнопка располагалась там, где вам нужно */
+        }
+
+        .edit-profile-btn {
+            background-color: white; /* зеленый цвет кнопки */
+
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+
+        .edit-profile-btn:hover {
+            background-color: violet; /* темнее оттенок зеленого при наведении */
+        }
+
+
+
+        .friends-list {
+    position: absolute;
+    top: 173px; /* Adjust as needed */
+    left: 330px; /* Adjust as needed */
+    z-index: 10; /* To ensure it's above other elements */
+}
+
+.friends-list-btn {
+    background-color: #fff; /* Black background */
+    color: #000; /* White text */
+    border-radius: 20px;
+    cursor: pointer;
+    border: none;
+    padding: 10px 20px;
+
+}
+
+
+
+        .searchusers {
+            position: absolute;
+            top: 25px;
+            left: 900px;
+            border-radius: 20px;
+            cursor: pointer;
+            border: none;
+
+        }
+
+        .searchusers-btn {
+            background-color: #fff;
+            color: #000;
+            border-radius: 20px;
+            cursor: pointer;
+            border: none;
+            padding: 10px 20px;
+        }
+
+        .schedule-btn {
+            background-color: #fff;
+            color: #000;
+            border-radius: 20px;
+            cursor: pointer;
+            border: none;
+            padding: 10px 24.5px;
+        }
+
+        .top-right-buttons {
+        position: absolute;
+        margin-left: 1040px;
+        margin-top: 60px;
+        cursor: pointer;
+
+      }
+
+        body.dark-theme {
+  background-color: black;
+  color: white;
+}
+
+body.dark-theme .post,
+body.dark-theme .modal-content,
+body.dark-theme .settings-btn,
+body.dark-theme .createpost-btn,
+body.dark-theme .groups-btn,
+body.dark-theme .edit-profile-btn,
+body.dark-theme .support-btn,
+body.dark-theme .user-info,
+body.dark-theme .searchusers,
+body.dark-theme .friends-list-btn,
+body.dark-theme .groups-list {
+  background-color: black;
+  color: white;
+}
+
+        body.dark-theme .groups-list li:hover {
+  background-color: #333;
+}
+
+body.dark-theme .post {
+  border-color: #444;
+}
+
+        body.dark-theme .schedule-btn {
+  background-color: black;
+  color: white;
+}
+
+        body.dark-theme .search-friends-btn {
+  background-color: black;
+  color: white;
+}
+        body.dark-theme .user-info {
+  background-color: black; /* Фон для темной темы */
+  color: white; /* Цвет текста для темной темы */
+}
+
+body.dark-theme .user-info,
+body.dark-theme .user-details span {
+  background-color: black; /* Фон для темной темы */
+  color: white; /* Цвет текста для темной темы */
+}
+
+        .change-user-btn {
+    display: block; /* или inline-block в зависимости от вашего дизайна */
+    margin-top: 95px;
+    margin-left: -743px;/* или другой отступ для разделения от информации пользователя */
+    padding: 10px 20px; /* или другие размеры в зависимости от вашего дизайна */
+    background-color: #fff;
+    color: #000;
+    border-radius: 15px;
+    border: none;
+    cursor: pointer;
+}
+
+.change-user-btn:hover {
+    background-color: violet; /* Цвет при наведении */
+}
+
+body.dark-theme .change-user-btn {
+    background-color: black; /* Цвет фона для темной темы */
+    color: #fff; /* Цвет текста для темной темы */
+}
+
+        /* Изменения: Обновил стили для класса support-btn, чтобы он выглядел как кнопка */
+.support-button {
+    margin-left: 1040px;
+
+    display: inline-block;
+    padding: 8px 23px;
+    background-color: white;
+    color: black;
+    text-align: center;
+    border-radius: 15px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.support-button:hover {
+    background-color: white;
+    color: black;
+}
+
+        body.dark-theme .support-button {
+    background-color: black; /* Цвет фона для темной темы */
+    color: white; /* Цвет текста для темной темы */
+}
+
+body.dark-theme .support-button:hover {
+    background-color: black; /* Цвет фона при наведении в темной теме */
+    color: white; /* Цвет текста при наведении в темной теме */
+}
+
+
+
+
+
+
+
+
+
+
+
+
+body.dark-theme .notifications-btn {
+    background-color: black; /* Фон для темной темы */
+    color: white; /* Текст для темной темы */
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </style>
+</head>
+
+
+
+<body>
+
+    <div class="logo">
+    <img src="{{ url_for('static', filename='logo.png') }}" alt="VMtuci лого" width="100" height="50">
+    </div>
+
+    <div class="switch-container">
+        <label class="switch">
+            <input type="checkbox" id="themeSwitch">
+            <span class="slider"></span>
+        </label>
+    </div>
+
+
+    <div class="buttons-container">
+    <div class="top-right-buttons">
+        <button class="schedule-btn" onclick="window.location.href='https://vk.com/services?w=app7956031_487765024'">Расписание</button>
+        <button class="change-user-btn" onclick="window.location.href='{{ url_for('signin') }}'">Сменить пользователя</button>
+
+
+
+    </div>
+
+</div>
+
+
+<div class="support-button">
+<div onclick="location.href='http://t.me/VMtuciHelper_bot'">Поддержка</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class="settings">
+    <!-- Кнопка для открытия модального окна -->
+    <button class="settings-btn" onclick="window.location.href='{{ url_for('registration') }}'">Выйти</button>
+
+    <!-- Модальное окно для настроек -->
+    <div id="settingsModal" class="modal">
+        <!-- Содержимое модального окна -->
+        <div class="modal-content">
+            <span class="close" onclick="closeSettings()">&times;</span>
+            <div class="theme-selector">
+                <label for="theme">Тема:</label>
+                <select id="theme" onchange="changeTheme(this.value)">
+                    <option value="light">Светлая</option>
+                    <option value="dark">Темная</option>
+                </select>
+            </div>
+            <button onclick="closeSettings()">Сохранить</button>
+        </div>
+    </div>
+</div>
+
+    <div class="createpost">
+    <button class="createpost-btn" onclick="window.location.href='{{ url_for('create_post') }}'">Создайте пост</button>
+    </div>
+
+
+
+    <div class="user-info">
+    <div class="user-details">
+
+        <span>{{ user_data['name'] }}</span>
+        <span>{{ user_data['surname'] }}</span>
+    </div>
+</div>
+
+
+
+
+    <div class="edit-profile">
+        <button class="edit-profile-btn" onclick="window.location.href='{{ url_for('user_settings') }}'">Редактировать профиль</button>
+    </div>
+
+    <div class="posts-container">
+        {% for post in posts %}
+            <div class="post">
+                <h3>{{ post.title }}</h3>
+                <p>{{ post.content }}</p>
+                <img src="{{ url_for('static', filename='uploads/' + post.image_filename) }}" alt="Изображение поста">
+
+                <!-- Форма для удаления -->
+                <form action="{{ url_for('delete_post', post_index=loop.index0) }}" method="post">
+                    <button type="submit" class="delete-post-btn">Удалить</button>
+                </form>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="groups">
+        <button class="groups-btn" onclick="toggleGroupsList()">Сообщества</button>
+        <div class="groups-list">
+            <ul>
+                <li onclick="goToPage('https://vk.com/overhearmtuci')">Подслушано VMtuci</li>
+                <li onclick="goToPage('https://vk.com/rhymes')">Рифмы и Панчи</li>
+                <li onclick="goToPage('https://www.m24.ru/news')">Новости Москвы</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="searchusers">
+    <button class="search-friends-btn" onclick="window.location.href='{{ url_for('all_users') }}'">Поиск Друзей</button>
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+    <div class="friends-list">
+    <button class="friends-list-btn" onclick="toggleFriendsList()">Список друзей</button>
+    <div id="friendsList" style="display: none;">
+        <ul id="friends">
+
+        </ul>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+    <script>
+document.addEventListener('DOMContentLoaded', (event) => {
+  const backgroundStyle = window.getComputedStyle(document.body).backgroundImage;
+  localStorage.setItem('background', backgroundStyle); // Использование ключа 'background'
+
+
+    // Функция для изменения фона и сохранения темы
+    function updateThemeAndBackground(isDarkTheme) {
+        if (isDarkTheme) {
+            body.classList.add('dark-theme');
+            body.style.backgroundImage = "url('/static/fontwo.png')";
+            localStorage.setItem('theme', 'dark');
+        } else {
+            body.classList.remove('dark-theme');
+            body.style.backgroundImage = "url('/static/fon.png')";
+            localStorage.setItem('theme', 'light');
+        }
+    }
+
+    // Загрузка сохраненной темы
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+        switcher.checked = true;
+        updateThemeAndBackground(true);
+    } else {
+        updateThemeAndBackground(false);
+    }
+
+    // Обработчик изменения темы
+    switcher.addEventListener('change', function() {
+        updateThemeAndBackground(this.checked);
+    });
+});
+
+
+
+
+
+
+</script>
+
+<script>
+        function deletePost(postId) {
+            // Здесь можно отправить запрос на сервер для удаления поста по его ID
+            console.log('Пост с ID ' + postId + ' будет удален.');
+
+            // Затем обновите страницу или удалите элемент DOM поста
+        }
+    </script>
+
+<script>
+        function toggleGroupsList() {
+    var list = document.querySelector('.groups-list');
+    if (list.style.display === 'none' || !list.style.display) {
+        list.style.display = 'block';
+        list.style.opacity = 1;
+    } else {
+        list.style.opacity = 0;
+        setTimeout(function() {
+            list.style.display = 'none';
+        }, 500); // Задержка, равная продолжительности анимации
+    }
+}
+
+        function goToPage(url) {
+            window.location.href = url; // Перенаправление на указанный URL
+        }
+    </script>
+
+ <script>
+        const switcher = document.getElementById('themeSwitch');
+        const body = document.body;
+
+        switcher.addEventListener('change', function() {
+          if(this.checked) {
+            body.classList.add('brown');
+          } else {
+            body.classList.remove('brown');
+          }
+        });
+      </script>
+
+        <script>
+    function toggleFriendsList() {
+        var list = document.getElementById('friendsList');
+        if (list.style.display === 'none' || !list.style.display) {
+            list.style.display = 'block';
+            // Example: Load and display friends
+            // This is just a placeholder. You'll need to replace it with your actual data fetching and display logic
+            var friends = ['Друзей нет']; // Replace with actual data
+            var friendsListHtml = friends.map(function(friend) {
+                return '<li>' + friend + '</li>';
+            }).join('');
+            document.getElementById('friends').innerHTML = friendsListHtml;
+        } else {
+            list.style.display = 'none';
+        }
+    }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
